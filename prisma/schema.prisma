@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model item { 
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  checked     Boolean  @default(false)
+  position    Int      @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  checkedAt   DateTime?
+  deletedAt   DateTime?
+
+  @@map("items")
+}
