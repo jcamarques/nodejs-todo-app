@@ -3,20 +3,56 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider =  "postgresql"
+  url      =  env("DATABASE_URL")
 }
 
-model item { 
+
+//User with hashed password
+model User {
   id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
   name        String
-  description String?
-  checked     Boolean  @default(false)
-  position    Int      @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  checkedAt   DateTime?
-  deletedAt   DateTime?
+  username    String
+  created_at  DateTime @default(now())
+  deleted_at  DateTime?
+
+  list        List[]
+  
+
+  @@map("users")
+}
+
+model Item { 
+  id           String   @id @default(uuid())
+  name         String
+  description  String?
+  checked      Boolean  @default(false)
+  position     Int      @default(autoincrement())
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+  checked_at   DateTime?
+  deleted_at   DateTime?
+
+
+  
+  list         List?     @relation(fields: [list_id], references: [id])
+  list_id      String?
 
   @@map("items")
+}
+
+model List {
+  id           String   @id @default(uuid())
+  name         String
+  items        Item[]
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  deleted_at   DateTime?
+
+  user         User     @relation(fields: [user_id], references: [id])
+  user_id      String
+
+  @@map("lists")
 }
