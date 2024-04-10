@@ -1,9 +1,22 @@
 services:
+  api-todo-pg:
+    image: bitnami/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USERNAME=todo-list
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_DATABASE=node-todo-project
+    volumes:
+      - ../database:/var/lib/mysql
+    networks:
+      api-db-network:
+        ipv4_address: 172.28.0.3
   api:
     image: "node:18.15-buster"
     build: .
     container_name: "node-todo-project"
-    command: sh -c "bash"
+    command: sh -c "npm install && npx prisma migrate dev && npm run dev"
     ports:
       - "3333:3333"
       - "5555:5555"
@@ -19,19 +32,7 @@ services:
       - api-todo-pg
 
     
-  api-todo-pg:
-    image: bitnami/postgresql
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRESQL_USERNAME=todo-list
-      - POSTGRESQL_PASSWORD=password
-      - POSTGRESQL_DATABASE=node-todo-project
-    volumes:
-      - ../database:/var/lib/mysql
-    networks:
-      api-db-network:
-        ipv4_address: 172.28.0.3
+  
 networks:
   api-db-network:
     driver: bridge

@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "tsx watch src/server.ts",
-    "dev": "node --watch --no-warnings server.js",
+    "dev": "tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
