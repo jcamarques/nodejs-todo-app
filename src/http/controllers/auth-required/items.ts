@@ -7,10 +7,10 @@ import { z } from 'zod'
 export async function getItems(req: FastifyRequest, res: FastifyReply) {
   const items = await prisma.item.findMany({
     where: {
-      deletedAt: null,
+      deleted_at: null,
     },
     orderBy: {
-      createdAt: 'asc',
+      created_at: 'asc',
     },
   })
   res.send(items)
@@ -73,29 +73,29 @@ export async function updateItem(req: FastifyRequest, res: FastifyReply) {
   const { id } = validatedUpdateItemSchema.data
   const {name, description, checked} = validatedItemSchema.data
   
-  const currentItem = await prisma.item.findUnique({ where: { id, deletedAt: null } });
+  const currentItem = await prisma.item.findUnique({ where: { id, deleted_at: null } });
 
   if (!currentItem) {
     return res.status(404).send({ error: 'Item not found ❌' })
   }
 
-  let checkedAt = currentItem.checkedAt; // mantém o valor atual de checkedAt
+  let checked_at = currentItem.checked_at; // mantém o valor atual de checked_at
 
   if (checked !== undefined) {
-    checkedAt = checked ? new Date() : null;
+    checked_at = checked ? new Date() : null;
   }
 
 
   const updatedItem = await prisma.item.update({
     where: {
       id,
-      deletedAt: null,
+      deleted_at: null,
     },
     data: {
       name,
       description,
       checked,
-      checkedAt,
+      checked_at,
     }
   })
 
@@ -119,7 +119,7 @@ export async function deleteItem(req: FastifyRequest, res: FastifyReply) {
       id,
     },
     data: {
-      deletedAt: new Date(),
+      deleted_at: new Date(),
     },
   })
 
