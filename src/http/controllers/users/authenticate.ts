@@ -47,17 +47,6 @@ export async function authenticate(req: FastifyRequest, res: FastifyReply) {
     expiresIn: '30min'
   })
 
-  res.setCookie('access_token', refreshToken, {
-    path: '/',
-    httpOnly: true,
-    secure: true,
-    sameSite: true,
-  }).status(200).send(
-    {
-      token,
-      refreshToken,
-    }
-  )
   
 
 }
